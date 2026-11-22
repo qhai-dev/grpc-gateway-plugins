@@ -6,7 +6,7 @@ compile. These are the rules every plugin implements, defined in `docs/v1.md`
 
 | Rule | Value |
 | --- | --- |
-| Types file | `<base>_pb.ts` |
+| Types file | `<base>_type.ts` |
 | Axios file | `<base>_api.ts` |
 | React Query file | `<base>_react_query.ts` |
 | `<base>` | proto path with `.proto` removed, e.g. `user/v1/user` |
@@ -45,19 +45,19 @@ React Query files always name types exactly as the types file declares them.
 | `google.protobuf.NullValue` | `null` |
 
 Well-known types are inlined; `google/protobuf/*.proto` is never generated or
-imported, so Buf's `include_imports` does not produce `timestamp_pb.ts`.
+imported, so Buf's `include_imports` does not produce `timestamp_type.ts`.
 
 ## Imports
 
 - Same file: the bare type name.
 - Another generated proto: `import type * as <alias> from "<relative>"`, where the
   alias folds the whole proto path into one identifier
-  (`user/v1/address.proto` → `user_v1_address_pb`). A namespace import cannot
+  (`user/v1/address.proto` → `user_v1_address_type`). A namespace import cannot
   collide when two files export the same type name.
 - External modules: `M<proto>=<module>`, same syntax as protoc-gen-go. Mapped
   specifiers never get the relative import extension.
 - `import_extension=.js` replaces the `.ts` extension on relative imports only:
-  `./user_pb.ts` becomes `./user_pb.js`, and `user.types.ts` becomes
+  `./user_type.ts` becomes `./user_type.js`, and `user.types.ts` becomes
   `user.types.js`. Package specifiers are untouched.
 
 ## HTTP semantics
@@ -85,7 +85,7 @@ Every plugin accepts the whole shared set, even though it uses only part of it.
 
 | Parameter | Default | Meaning |
 | --- | --- | --- |
-| `types_suffix` | `_pb.ts` | types file suffix |
+| `types_suffix` | `_type.ts` | types file suffix |
 | `api_suffix` | `_api.ts` | Axios file suffix |
 | `query_suffix` | `_react_query.ts` | React Query file suffix |
 | `import_extension` | (empty) | extension appended to relative imports |

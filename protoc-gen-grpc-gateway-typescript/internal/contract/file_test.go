@@ -17,7 +17,7 @@ func TestFileBase(t *testing.T) {
 
 func TestOutputFiles(t *testing.T) {
 	o := DefaultOptions()
-	if got := o.TypesFile("user/v1/user.proto"); got != "user/v1/user_pb.ts" {
+	if got := o.TypesFile("user/v1/user.proto"); got != "user/v1/user_type.ts" {
 		t.Errorf("TypesFile = %q", got)
 	}
 	if got := o.ApiFile("user/v1/user.proto"); got != "user/v1/user_api.ts" {
@@ -56,7 +56,7 @@ func TestCustomSuffixes(t *testing.T) {
 
 func TestImportExtensionReplacesSourceExtension(t *testing.T) {
 	// NodeNext resolves the emitted specifier against the runtime file, so
-	// `_pb.ts` must become `_pb.js`, not `_pb.ts.js`.
+	// `_type.ts` must become `_type.js`, not `_type.ts.js`.
 	o := DefaultOptions()
 	o.ImportExtension = ".js"
 
@@ -64,7 +64,7 @@ func TestImportExtensionReplacesSourceExtension(t *testing.T) {
 	if !ok {
 		t.Fatal("expected an import path")
 	}
-	if spec != "../../common/v1/address_pb.js" {
+	if spec != "../../common/v1/address_type.js" {
 		t.Errorf("spec = %q", spec)
 	}
 }
@@ -72,7 +72,7 @@ func TestImportExtensionReplacesSourceExtension(t *testing.T) {
 func TestImportWithoutExtension(t *testing.T) {
 	o := DefaultOptions()
 	spec, _, _ := o.TypesImportPath("user/v1/user.proto", "common/v1/address.proto")
-	if spec != "../../common/v1/address_pb" {
+	if spec != "../../common/v1/address_type" {
 		t.Errorf("spec = %q", spec)
 	}
 }
@@ -81,7 +81,7 @@ func TestImportSameDirectory(t *testing.T) {
 	o := DefaultOptions()
 	o.ImportExtension = ".js"
 	spec, _, _ := o.TypesImportPath("user/v1/user.proto", "user/v1/order.proto")
-	if spec != "./order_pb.js" {
+	if spec != "./order_type.js" {
 		t.Errorf("spec = %q", spec)
 	}
 }
@@ -118,16 +118,16 @@ func TestSkipProto(t *testing.T) {
 func TestImportAliasIsStableAndUnique(t *testing.T) {
 	// Two files with the same base name in different directories must not
 	// collide: namespace imports would otherwise be ambiguous.
-	a := ImportAlias("user/v1/user.proto", "_pb.ts")
-	b := ImportAlias("admin/v1/user.proto", "_pb.ts")
+	a := ImportAlias("user/v1/user.proto", "_type.ts")
+	b := ImportAlias("admin/v1/user.proto", "_type.ts")
 	if a == b {
 		t.Errorf("aliases collide: %q", a)
 	}
-	if a != "user_v1_user_pb" {
+	if a != "user_v1_user_type" {
 		t.Errorf("alias = %q", a)
 	}
 	// Deterministic across calls.
-	if ImportAlias("user/v1/user.proto", "_pb.ts") != a {
+	if ImportAlias("user/v1/user.proto", "_type.ts") != a {
 		t.Error("alias is not deterministic")
 	}
 }

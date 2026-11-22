@@ -26,11 +26,11 @@ export type {
   OutOfPrint,
   SearchBooksRequest,
   UpdateBookRequest,
-} from "@/gen/bookstore/v1/bookstore_pb.js";
+} from "@/gen/bookstore/v1/bookstore_type.js";
 
 // Money lives in another proto file, so it is a separate module: this re-export is
 // the point where the generated namespace import becomes a plain named one for the
 // application.
-export type { Money } from "@/gen/common/v1/money_pb.js";
+export type { Money } from "@/gen/common/v1/money_type.js";
 
 export { bookstoreServiceKeys } from "@/gen/bookstore/v1/bookstore_react_query.js";

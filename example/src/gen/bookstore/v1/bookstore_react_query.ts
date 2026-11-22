@@ -2,7 +2,7 @@
 // @grpc-gateway-typescript-contract: v1
 // source: bookstore/v1/bookstore.proto
 
-import type * as bookstore_v1_bookstore_pb from "./bookstore_pb.js";
+import type * as bookstore_v1_bookstore_type from "./bookstore_type.js";
 
 import type { BookstoreServiceClient } from "./bookstore_api.js";
 import type { UseMutationOptions, UseQueryOptions } from "@tanstack/react-query";
@@ -20,28 +20,28 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 export const bookstoreServiceKeys = {
   all: ["BookstoreService"] as const,
 
-  getBook: (request: bookstore_v1_bookstore_pb.GetBookRequest | undefined) =>
+  getBook: (request: bookstore_v1_bookstore_type.GetBookRequest | undefined) =>
     [...bookstoreServiceKeys.all, "getBook", request] as const,
 
-  listBooks: (request: bookstore_v1_bookstore_pb.ListBooksRequest | undefined) =>
+  listBooks: (request: bookstore_v1_bookstore_type.ListBooksRequest | undefined) =>
     [...bookstoreServiceKeys.all, "listBooks", request] as const,
 
-  createBook: (request: bookstore_v1_bookstore_pb.CreateBookRequest) =>
+  createBook: (request: bookstore_v1_bookstore_type.CreateBookRequest) =>
     [...bookstoreServiceKeys.all, "createBook", request] as const,
 
-  updateBook: (request: bookstore_v1_bookstore_pb.UpdateBookRequest) =>
+  updateBook: (request: bookstore_v1_bookstore_type.UpdateBookRequest) =>
     [...bookstoreServiceKeys.all, "updateBook", request] as const,
 
-  deleteBook: (request: bookstore_v1_bookstore_pb.DeleteBookRequest) =>
+  deleteBook: (request: bookstore_v1_bookstore_type.DeleteBookRequest) =>
     [...bookstoreServiceKeys.all, "deleteBook", request] as const,
 
-  searchBooks: (request: bookstore_v1_bookstore_pb.SearchBooksRequest) =>
+  searchBooks: (request: bookstore_v1_bookstore_type.SearchBooksRequest) =>
     [...bookstoreServiceKeys.all, "searchBooks", request] as const,
 
-  archiveBook: (request: bookstore_v1_bookstore_pb.ArchiveBookRequest) =>
+  archiveBook: (request: bookstore_v1_bookstore_type.ArchiveBookRequest) =>
     [...bookstoreServiceKeys.all, "archiveBook", request] as const,
 
-  importBooks: (request: bookstore_v1_bookstore_pb.ImportBooksRequest) =>
+  importBooks: (request: bookstore_v1_bookstore_type.ImportBooksRequest) =>
     [...bookstoreServiceKeys.all, "importBooks", request] as const,
 } as const;
 
@@ -53,9 +53,9 @@ export const bookstoreServiceKeys = {
  */
 export function useGetBook(
   client: BookstoreServiceClient,
-  request: bookstore_v1_bookstore_pb.GetBookRequest | undefined,
+  request: bookstore_v1_bookstore_type.GetBookRequest | undefined,
   options?: Omit<
-    UseQueryOptions<bookstore_v1_bookstore_pb.Book, Error, bookstore_v1_bookstore_pb.Book>,
+    UseQueryOptions<bookstore_v1_bookstore_type.Book, Error, bookstore_v1_bookstore_type.Book>,
     "queryKey" | "queryFn"
   >,
 ) {
@@ -82,9 +82,9 @@ export function useGetBook(
  */
 export function useListBooks(
   client: BookstoreServiceClient,
-  request: bookstore_v1_bookstore_pb.ListBooksRequest | undefined,
+  request: bookstore_v1_bookstore_type.ListBooksRequest | undefined,
   options?: Omit<
-    UseQueryOptions<bookstore_v1_bookstore_pb.ListBooksResponse, Error, bookstore_v1_bookstore_pb.ListBooksResponse>,
+    UseQueryOptions<bookstore_v1_bookstore_type.ListBooksResponse, Error, bookstore_v1_bookstore_type.ListBooksResponse>,
     "queryKey" | "queryFn"
   >,
 ) {
@@ -110,11 +110,11 @@ export function useListBooks(
  */
 export function useCreateBook(
   client: BookstoreServiceClient,
-  options?: UseMutationOptions<bookstore_v1_bookstore_pb.CreateBookResponse, Error, bookstore_v1_bookstore_pb.CreateBookRequest>,
+  options?: UseMutationOptions<bookstore_v1_bookstore_type.CreateBookResponse, Error, bookstore_v1_bookstore_type.CreateBookRequest>,
 ) {
   return useMutation({
     ...options,
-    mutationFn: (request: bookstore_v1_bookstore_pb.CreateBookRequest) => client.createBook(request),
+    mutationFn: (request: bookstore_v1_bookstore_type.CreateBookRequest) => client.createBook(request),
   });
 }
 
@@ -126,11 +126,11 @@ export function useCreateBook(
  */
 export function useUpdateBook(
   client: BookstoreServiceClient,
-  options?: UseMutationOptions<bookstore_v1_bookstore_pb.UpdateBookResponse, Error, bookstore_v1_bookstore_pb.UpdateBookRequest>,
+  options?: UseMutationOptions<bookstore_v1_bookstore_type.UpdateBookResponse, Error, bookstore_v1_bookstore_type.UpdateBookRequest>,
 ) {
   return useMutation({
     ...options,
-    mutationFn: (request: bookstore_v1_bookstore_pb.UpdateBookRequest) => client.updateBook(request),
+    mutationFn: (request: bookstore_v1_bookstore_type.UpdateBookRequest) => client.updateBook(request),
   });
 }
 
@@ -139,11 +139,11 @@ export function useUpdateBook(
  */
 export function useDeleteBook(
   client: BookstoreServiceClient,
-  options?: UseMutationOptions<bookstore_v1_bookstore_pb.DeleteBookResponse, Error, bookstore_v1_bookstore_pb.DeleteBookRequest>,
+  options?: UseMutationOptions<bookstore_v1_bookstore_type.DeleteBookResponse, Error, bookstore_v1_bookstore_type.DeleteBookRequest>,
 ) {
   return useMutation({
     ...options,
-    mutationFn: (request: bookstore_v1_bookstore_pb.DeleteBookRequest) => client.deleteBook(request),
+    mutationFn: (request: bookstore_v1_bookstore_type.DeleteBookRequest) => client.deleteBook(request),
   });
 }
 
@@ -153,11 +153,11 @@ export function useDeleteBook(
  */
 export function useSearchBooks(
   client: BookstoreServiceClient,
-  options?: UseMutationOptions<bookstore_v1_bookstore_pb.SearchBooksResponse, Error, bookstore_v1_bookstore_pb.SearchBooksRequest>,
+  options?: UseMutationOptions<bookstore_v1_bookstore_type.SearchBooksResponse, Error, bookstore_v1_bookstore_type.SearchBooksRequest>,
 ) {
   return useMutation({
     ...options,
-    mutationFn: (request: bookstore_v1_bookstore_pb.SearchBooksRequest) => client.searchBooks(request),
+    mutationFn: (request: bookstore_v1_bookstore_type.SearchBooksRequest) => client.searchBooks(request),
   });
 }
 
@@ -166,11 +166,11 @@ export function useSearchBooks(
  */
 export function useArchiveBook(
   client: BookstoreServiceClient,
-  options?: UseMutationOptions<bookstore_v1_bookstore_pb.ArchiveBookResponse, Error, bookstore_v1_bookstore_pb.ArchiveBookRequest>,
+  options?: UseMutationOptions<bookstore_v1_bookstore_type.ArchiveBookResponse, Error, bookstore_v1_bookstore_type.ArchiveBookRequest>,
 ) {
   return useMutation({
     ...options,
-    mutationFn: (request: bookstore_v1_bookstore_pb.ArchiveBookRequest) => client.archiveBook(request),
+    mutationFn: (request: bookstore_v1_bookstore_type.ArchiveBookRequest) => client.archiveBook(request),
   });
 }
 
@@ -180,10 +180,10 @@ export function useArchiveBook(
  */
 export function useImportBooks(
   client: BookstoreServiceClient,
-  options?: UseMutationOptions<bookstore_v1_bookstore_pb.ImportBooksResponse, Error, bookstore_v1_bookstore_pb.ImportBooksRequest>,
+  options?: UseMutationOptions<bookstore_v1_bookstore_type.ImportBooksResponse, Error, bookstore_v1_bookstore_type.ImportBooksRequest>,
 ) {
   return useMutation({
     ...options,
-    mutationFn: (request: bookstore_v1_bookstore_pb.ImportBooksRequest) => client.importBooks(request),
+    mutationFn: (request: bookstore_v1_bookstore_type.ImportBooksRequest) => client.importBooks(request),
   });
 }

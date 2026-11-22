@@ -2,8 +2,8 @@
 
 Generates TypeScript types from protobuf messages and enums.
 
-Emits `<base>_pb.ts` for each proto in `file_to_generate`, where `<base>` is the
-proto path without `.proto`: `user/v1/user.proto` → `user/v1/user_pb.ts`.
+Emits `<base>_type.ts` for each proto in `file_to_generate`, where `<base>` is the
+proto path without `.proto`: `user/v1/user.proto` → `user/v1/user_type.ts`.
 
 This plugin implements the shared contract in [`../CONTRACT.md`](../CONTRACT.md).
 Well-known types are inlined as TypeScript primitives, and `google/protobuf/*`
@@ -51,7 +51,7 @@ set".
 
 | Option | Default | Meaning |
 | --- | --- | --- |
-| `types_suffix` | `_pb.ts` | output suffix |
+| `types_suffix` | `_type.ts` | output suffix |
 | `import_extension` | (empty) | extension appended to relative imports |
 | `use_proto_names` | `false` | emit proto field names instead of `json_name` |
 | `long_type` | `string` | `string` or `number` for 64-bit integers |

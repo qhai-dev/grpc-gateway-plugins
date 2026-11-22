@@ -252,17 +252,17 @@ func TestNoBodySendsNoData(t *testing.T) {
 func TestResponseBodyChangesTheWireType(t *testing.T) {
 	api := generate(t, "")["user/v1/user_api.ts"]
 
-	if !strings.Contains(api, "): Promise<user_v1_user_pb.User> {") {
+	if !strings.Contains(api, "): Promise<user_v1_user_type.User> {") {
 		t.Error("response_body must change the returned type to the field's type")
 	}
-	if !strings.Contains(api, "http.request<user_v1_user_pb.User>") {
+	if !strings.Contains(api, "http.request<user_v1_user_type.User>") {
 		t.Error("the axios generic must be the field's type, not the wrapper message")
 	}
 	if !strings.Contains(api, "return response.data;") {
 		t.Error("the body already is the field value, so no property access is needed")
 	}
 	// The wrapper message must not appear as the response type for this method.
-	if strings.Contains(api, "http.request<user_v1_user_pb.GetUserResponse>") {
+	if strings.Contains(api, "http.request<user_v1_user_type.GetUserResponse>") {
 		t.Error("response_body must not keep the wrapper message as the response type")
 	}
 }
@@ -420,7 +420,7 @@ func TestDeterministicOutput(t *testing.T) {
 func TestTypesImportMatchesContract(t *testing.T) {
 	api := generate(t, "import_extension=.js")["user/v1/user_api.ts"]
 
-	if !strings.Contains(api, `import type * as user_v1_user_pb from "./user_pb.js";`) {
+	if !strings.Contains(api, `import type * as user_v1_user_type from "./user_type.js";`) {
 		t.Error("the client must import the types file with the shared contract suffix")
 	}
 }

@@ -5,8 +5,9 @@
  * Money is an amount in a currency.
  *
  * It lives in its own proto file on purpose: the bookstore protos reference it
- * across files, which is what exercises the generated namespace import
- * (`import type * as common_v1_money_pb from "../common/v1/money_pb.js"`).
+ * across files, which is what exercises the generated namespace import. In
+ * bookstore_type.ts that import is
+ * `import type * as common_v1_money_type from "../../common/v1/money_type.js"`.
  */
 export type Money = {
   /**

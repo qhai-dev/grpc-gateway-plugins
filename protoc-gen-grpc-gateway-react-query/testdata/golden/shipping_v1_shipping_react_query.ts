@@ -2,7 +2,7 @@
 // @grpc-gateway-typescript-contract: v1
 // source: shipping/v1/shipping.proto
 
-import type * as shipping_v1_shipping_pb from "./shipping_pb.js";
+import type * as shipping_v1_shipping_type from "./shipping_type.js";
 
 import type { ShipperServiceClient } from "./shipping_api.js";
 import type { UseMutationOptions, UseQueryOptions } from "@tanstack/react-query";
@@ -16,22 +16,22 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 export const shipperServiceKeys = {
   all: ["ShipperService"] as const,
 
-  getShipper: (request: shipping_v1_shipping_pb.GetShipperRequest | undefined) =>
+  getShipper: (request: shipping_v1_shipping_type.GetShipperRequest | undefined) =>
     [...shipperServiceKeys.all, "getShipper", request] as const,
 
-  activateShipper: (request: shipping_v1_shipping_pb.ActivateShipperRequest) =>
+  activateShipper: (request: shipping_v1_shipping_type.ActivateShipperRequest) =>
     [...shipperServiceKeys.all, "activateShipper", request] as const,
 
-  updateShipper: (request: shipping_v1_shipping_pb.UpdateShipperRequest) =>
+  updateShipper: (request: shipping_v1_shipping_type.UpdateShipperRequest) =>
     [...shipperServiceKeys.all, "updateShipper", request] as const,
 
-  watchWarehouse: (request: shipping_v1_shipping_pb.WatchWarehouseRequest | undefined) =>
+  watchWarehouse: (request: shipping_v1_shipping_type.WatchWarehouseRequest | undefined) =>
     [...shipperServiceKeys.all, "watchWarehouse", request] as const,
 
-  exportShippers: (request: shipping_v1_shipping_pb.ExportShippersRequest | undefined) =>
+  exportShippers: (request: shipping_v1_shipping_type.ExportShippersRequest | undefined) =>
     [...shipperServiceKeys.all, "exportShippers", request] as const,
 
-  customRule: (request: shipping_v1_shipping_pb.CustomRuleRequest) =>
+  customRule: (request: shipping_v1_shipping_type.CustomRuleRequest) =>
     [...shipperServiceKeys.all, "customRule", request] as const,
 } as const;
 
@@ -41,9 +41,9 @@ export const shipperServiceKeys = {
  */
 export function useGetShipper(
   client: ShipperServiceClient,
-  request: shipping_v1_shipping_pb.GetShipperRequest | undefined,
+  request: shipping_v1_shipping_type.GetShipperRequest | undefined,
   options?: Omit<
-    UseQueryOptions<shipping_v1_shipping_pb.GetShipperResponse, Error, shipping_v1_shipping_pb.GetShipperResponse>,
+    UseQueryOptions<shipping_v1_shipping_type.GetShipperResponse, Error, shipping_v1_shipping_type.GetShipperResponse>,
     "queryKey" | "queryFn"
   >,
 ) {
@@ -67,11 +67,11 @@ export function useGetShipper(
  */
 export function useActivateShipper(
   client: ShipperServiceClient,
-  options?: UseMutationOptions<shipping_v1_shipping_pb.ActivateShipperResponse, Error, shipping_v1_shipping_pb.ActivateShipperRequest>,
+  options?: UseMutationOptions<shipping_v1_shipping_type.ActivateShipperResponse, Error, shipping_v1_shipping_type.ActivateShipperRequest>,
 ) {
   return useMutation({
     ...options,
-    mutationFn: (request: shipping_v1_shipping_pb.ActivateShipperRequest) => client.activateShipper(request),
+    mutationFn: (request: shipping_v1_shipping_type.ActivateShipperRequest) => client.activateShipper(request),
   });
 }
 
@@ -81,11 +81,11 @@ export function useActivateShipper(
  */
 export function useUpdateShipper(
   client: ShipperServiceClient,
-  options?: UseMutationOptions<shipping_v1_shipping_pb.UpdateShipperResponse, Error, shipping_v1_shipping_pb.UpdateShipperRequest>,
+  options?: UseMutationOptions<shipping_v1_shipping_type.UpdateShipperResponse, Error, shipping_v1_shipping_type.UpdateShipperRequest>,
 ) {
   return useMutation({
     ...options,
-    mutationFn: (request: shipping_v1_shipping_pb.UpdateShipperRequest) => client.updateShipper(request),
+    mutationFn: (request: shipping_v1_shipping_type.UpdateShipperRequest) => client.updateShipper(request),
   });
 }
 
@@ -94,9 +94,9 @@ export function useUpdateShipper(
  */
 export function useWatchWarehouse(
   client: ShipperServiceClient,
-  request: shipping_v1_shipping_pb.WatchWarehouseRequest | undefined,
+  request: shipping_v1_shipping_type.WatchWarehouseRequest | undefined,
   options?: Omit<
-    UseQueryOptions<shipping_v1_shipping_pb.WatchWarehouseResponse, Error, shipping_v1_shipping_pb.WatchWarehouseResponse>,
+    UseQueryOptions<shipping_v1_shipping_type.WatchWarehouseResponse, Error, shipping_v1_shipping_type.WatchWarehouseResponse>,
     "queryKey" | "queryFn"
   >,
 ) {
@@ -121,9 +121,9 @@ export function useWatchWarehouse(
  */
 export function useExportShippers(
   client: ShipperServiceClient,
-  request: shipping_v1_shipping_pb.ExportShippersRequest | undefined,
+  request: shipping_v1_shipping_type.ExportShippersRequest | undefined,
   options?: Omit<
-    UseQueryOptions<shipping_v1_shipping_pb.ExportShippersResponse, Error, shipping_v1_shipping_pb.ExportShippersResponse>,
+    UseQueryOptions<shipping_v1_shipping_type.ExportShippersResponse, Error, shipping_v1_shipping_type.ExportShippersResponse>,
     "queryKey" | "queryFn"
   >,
 ) {
@@ -147,10 +147,10 @@ export function useExportShippers(
  */
 export function useCustomRule(
   client: ShipperServiceClient,
-  options?: UseMutationOptions<shipping_v1_shipping_pb.CustomRuleResponse, Error, shipping_v1_shipping_pb.CustomRuleRequest>,
+  options?: UseMutationOptions<shipping_v1_shipping_type.CustomRuleResponse, Error, shipping_v1_shipping_type.CustomRuleRequest>,
 ) {
   return useMutation({
     ...options,
-    mutationFn: (request: shipping_v1_shipping_pb.CustomRuleRequest) => client.customRule(request),
+    mutationFn: (request: shipping_v1_shipping_type.CustomRuleRequest) => client.customRule(request),
   });
 }

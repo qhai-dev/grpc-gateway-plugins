@@ -10,15 +10,15 @@ import (
 func TestGoldenTypes(t *testing.T) {
 	out := generate(t, "import_extension=.js", nil)
 
-	checkGolden(t, "user_v1_user_pb.ts", out["user/v1/user_pb.ts"])
-	checkGolden(t, "common_v1_address_pb.ts", out["common/v1/address_pb.ts"])
+	checkGolden(t, "user_v1_user_type.ts", out["user/v1/user_type.ts"])
+	checkGolden(t, "common_v1_address_type.ts", out["common/v1/address_type.ts"])
 }
 
 // TestTypeMappingMatrix asserts every row of the mapping table in docs/v1.md
 // §3.5 individually, so a regression names the row instead of showing up as one
 // large golden diff.
 func TestTypeMappingMatrix(t *testing.T) {
-	user := generate(t, "", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "", nil)["user/v1/user_type.ts"]
 
 	cases := []struct{ field, want string }{
 		// Scalars.
@@ -57,7 +57,7 @@ func TestTypeMappingMatrix(t *testing.T) {
 // TestCollectionsMapping covers repeated and map fields, including the rule that
 // JSON map keys are always strings.
 func TestCollectionsMapping(t *testing.T) {
-	user := generate(t, "", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "", nil)["user/v1/user_type.ts"]
 
 	if !strings.Contains(user, "ids?: string[];") {
 		t.Error("repeated string must map to string[]")
@@ -73,7 +73,7 @@ func TestCollectionsMapping(t *testing.T) {
 // TestInt64AsNumber covers long_type=number, the documented opt-in with a
 // precision caveat.
 func TestInt64AsNumber(t *testing.T) {
-	user := generate(t, "long_type=number", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "long_type=number", nil)["user/v1/user_type.ts"]
 
 	if !strings.Contains(user, "createdAtEpoch?: number;") {
 		t.Error("long_type=number must map int64 to number")
@@ -86,7 +86,7 @@ func TestInt64AsNumber(t *testing.T) {
 // TestEnumStyleUnionIsDefault checks the union form and that every value name is
 // preserved.
 func TestEnumStyleUnionIsDefault(t *testing.T) {
-	user := generate(t, "", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "", nil)["user/v1/user_type.ts"]
 
 	want := `export type UserStatus =
   | "USER_STATUS_UNSPECIFIED"
@@ -99,7 +99,7 @@ func TestEnumStyleUnionIsDefault(t *testing.T) {
 
 // TestEnumStyleConst checks the const-object variant.
 func TestEnumStyleConst(t *testing.T) {
-	user := generate(t, "enum_style=const", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "enum_style=const", nil)["user/v1/user_type.ts"]
 
 	for _, want := range []string{
 		"export const UserStatus = {",
@@ -115,7 +115,7 @@ func TestEnumStyleConst(t *testing.T) {
 
 // TestEnumStyleEnum checks the TypeScript enum variant.
 func TestEnumStyleEnum(t *testing.T) {
-	user := generate(t, "enum_style=enum", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "enum_style=enum", nil)["user/v1/user_type.ts"]
 
 	if !strings.Contains(user, "export enum UserStatus {") {
 		t.Error("enum_style=enum must emit a TypeScript enum")
@@ -129,7 +129,7 @@ func TestEnumStyleEnum(t *testing.T) {
 // member may be set, the others are forbidden with `?: never`, and the no-member-set
 // arm is present because proto3 permits an unset oneof.
 func TestOneofUnionIsMutuallyExclusive(t *testing.T) {
-	user := generate(t, "", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "", nil)["user/v1/user_type.ts"]
 
 	want := `export type Payment =
   | {
@@ -162,7 +162,7 @@ func TestOneofUnionIsMutuallyExclusive(t *testing.T) {
 // for that, or a server response with no member chosen cannot be typed as its own
 // generated type.
 func TestOneofAllowsUnset(t *testing.T) {
-	user := generate(t, "", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "", nil)["user/v1/user_type.ts"]
 
 	// The final arm sets no member at all.
 	paymentSection := section(user, "type Payment")
@@ -178,7 +178,7 @@ func TestOneofAllowsUnset(t *testing.T) {
 // TestOneofFlatFallback checks oneof_style=flat, which emits plain optional
 // members.
 func TestOneofFlatFallback(t *testing.T) {
-	user := generate(t, "oneof_style=flat", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "oneof_style=flat", nil)["user/v1/user_type.ts"]
 
 	want := `export type Payment = {
   card?: Card;
@@ -194,7 +194,7 @@ func TestOneofFlatFallback(t *testing.T) {
 // `optional` field creates a synthetic oneof, and if it were treated as a
 // business oneof the field would be forced into an exclusive union.
 func TestSyntheticOneofIsNotAUnion(t *testing.T) {
-	user := generate(t, "", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "", nil)["user/v1/user_type.ts"]
 
 	if !strings.Contains(user, "nickname?: string;") {
 		t.Error("a proto3 optional field must stay a plain optional property")
@@ -211,10 +211,10 @@ func TestSyntheticOneofIsNotAUnion(t *testing.T) {
 
 // TestNestedTypeNaming checks Outer_Inner and the configurable separator.
 func TestNestedTypeNaming(t *testing.T) {
-	if user := generate(t, "", nil)["user/v1/user_pb.ts"]; !strings.Contains(user, "export type User_Nested = {") {
+	if user := generate(t, "", nil)["user/v1/user_type.ts"]; !strings.Contains(user, "export type User_Nested = {") {
 		t.Error("nested messages must be named Outer_Inner")
 	}
-	if user := generate(t, "nested_name_separator=__", nil)["user/v1/user_pb.ts"]; !strings.Contains(user, "export type User__Nested = {") {
+	if user := generate(t, "nested_name_separator=__", nil)["user/v1/user_type.ts"]; !strings.Contains(user, "export type User__Nested = {") {
 		t.Error("nested_name_separator must be honoured")
 	}
 }
@@ -222,7 +222,7 @@ func TestNestedTypeNaming(t *testing.T) {
 // TestUseProtoNames checks that field names switch to proto names, which must
 // match the gateway's marshaler configuration.
 func TestUseProtoNames(t *testing.T) {
-	user := generate(t, "use_proto_names=true", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "use_proto_names=true", nil)["user/v1/user_type.ts"]
 
 	if !strings.Contains(user, "page_size?: number;") {
 		t.Error("use_proto_names must emit proto field names")
@@ -234,7 +234,7 @@ func TestUseProtoNames(t *testing.T) {
 
 // TestCommentsEmitted and its off-switch.
 func TestCommentsEmitted(t *testing.T) {
-	user := generate(t, "", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "", nil)["user/v1/user_type.ts"]
 	if !strings.Contains(user, "/**") {
 		t.Error("proto leading comments must become JSDoc")
 	}
@@ -247,7 +247,7 @@ func TestCommentsEmitted(t *testing.T) {
 }
 
 func TestCommentsDisabled(t *testing.T) {
-	user := generate(t, "emit_comments=false", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "emit_comments=false", nil)["user/v1/user_type.ts"]
 	if strings.Contains(user, "/**") {
 		t.Error("emit_comments=false must drop JSDoc")
 	}
@@ -255,7 +255,7 @@ func TestCommentsDisabled(t *testing.T) {
 
 // TestFileHeader checks the stable banner the contract requires.
 func TestFileHeader(t *testing.T) {
-	user := generate(t, "", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "", nil)["user/v1/user_type.ts"]
 
 	for _, want := range []string{
 		"// Code generated by protoc-gen-grpc-gateway-typescript. DO NOT EDIT.",
@@ -271,26 +271,26 @@ func TestFileHeader(t *testing.T) {
 // TestCrossFileNamespaceImport checks that a type from another proto is imported
 // under a namespace alias instead of being copied into the file.
 func TestCrossFileNamespaceImport(t *testing.T) {
-	user := generate(t, "import_extension=.js", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "import_extension=.js", nil)["user/v1/user_type.ts"]
 
-	if !strings.Contains(user, `import type * as common_v1_address_pb from "../../common/v1/address_pb.js";`) {
+	if !strings.Contains(user, `import type * as common_v1_address_type from "../../common/v1/address_type.js";`) {
 		t.Errorf("expected a namespace import, got:\n%s", user[:min(len(user), 400)])
 	}
-	if !strings.Contains(user, "address?: common_v1_address_pb.Address;") {
+	if !strings.Contains(user, "address?: common_v1_address_type.Address;") {
 		t.Error("cross-file types must be referenced through the namespace")
 	}
 }
 
 // TestNoWellKnownTypeImports checks that google/protobuf is never imported.
 func TestNoWellKnownTypeImports(t *testing.T) {
-	user := generate(t, "", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "", nil)["user/v1/user_type.ts"]
 
 	for _, forbidden := range []string{
 		"google/protobuf",
-		"timestamp_pb",
-		"wrappers_pb",
-		"struct_pb",
-		"any_pb",
+		"timestamp_type",
+		"wrappers_type",
+		"struct_type",
+		"any_type",
 	} {
 		if strings.Contains(user, forbidden) {
 			t.Errorf("well-known types must be inlined, found %q", forbidden)
@@ -313,7 +313,7 @@ func TestDeterministicOutput(t *testing.T) {
 
 // TestImportOrderIsSorted checks that imports do not depend on field order.
 func TestImportOrderIsSorted(t *testing.T) {
-	user := generate(t, "", nil)["user/v1/user_pb.ts"]
+	user := generate(t, "", nil)["user/v1/user_type.ts"]
 
 	var imports []string
 	for _, line := range strings.Split(user, "\n") {

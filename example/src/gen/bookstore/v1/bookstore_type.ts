@@ -2,7 +2,7 @@
 // @grpc-gateway-typescript-contract: v1
 // source: bookstore/v1/bookstore.proto
 
-import type * as common_v1_money_pb from "../../common/v1/money_pb.js";
+import type * as common_v1_money_type from "../../common/v1/money_type.js";
 
 /**
  * BookFormat is the physical format of a book.
@@ -132,7 +132,7 @@ export type CreateBookRequest = {
   /**
    * price is a cross-file message reference.
    */
-  price?: common_v1_money_pb.Money;
+  price?: common_v1_money_type.Money;
   /**
    * attributes is free-form JSON, typed as Record<string, JsonValue>.
    */
@@ -263,7 +263,7 @@ export type Book =
     title?: string;
     author?: string;
     format?: BookFormat;
-    price?: common_v1_money_pb.Money;
+    price?: common_v1_money_type.Money;
     publishedAt?: string;
     pageCount?: number;
     isbn13?: string;
@@ -276,7 +276,7 @@ export type Book =
     title?: string;
     author?: string;
     format?: BookFormat;
-    price?: common_v1_money_pb.Money;
+    price?: common_v1_money_type.Money;
     publishedAt?: string;
     pageCount?: number;
     isbn13?: string;
@@ -289,7 +289,7 @@ export type Book =
     title?: string;
     author?: string;
     format?: BookFormat;
-    price?: common_v1_money_pb.Money;
+    price?: common_v1_money_type.Money;
     publishedAt?: string;
     pageCount?: number;
     isbn13?: string;

@@ -5,7 +5,7 @@ protobuf definitions and their `google.api.http` annotations:
 
 | Project | Generates | Artifact |
 | --- | --- | --- |
-| [`protoc-gen-grpc-gateway-typescript`](protoc-gen-grpc-gateway-typescript/) | Message and enum types | `<base>_pb.ts` |
+| [`protoc-gen-grpc-gateway-typescript`](protoc-gen-grpc-gateway-typescript/) | Message and enum types | `<base>_type.ts` |
 | [`protoc-gen-grpc-gateway-axios`](protoc-gen-grpc-gateway-axios/) | Axios HTTP client | `<base>_api.ts` |
 | [`protoc-gen-grpc-gateway-react-query`](protoc-gen-grpc-gateway-react-query/) | TanStack Query v5 hooks | `<base>_react_query.ts` |
 

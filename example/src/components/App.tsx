@@ -1,7 +1,7 @@
 // The example UI: a shelf of books with filtering, selection and a create form.
 //
 // It is deliberately small. The point of the example is the layer between the proto
-// contract and the component: types come from the generated `_pb.ts`, requests go
+// contract and the component: types come from the generated `_type.ts`, requests go
 // through the generated client, and cache state comes from the generated hooks. The
 // components below contain no URLs, no fetch calls and no hand-written types.
 

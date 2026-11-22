@@ -35,7 +35,7 @@ type Options struct {
 // DefaultOptions returns the documented defaults.
 func DefaultOptions() *Options {
 	return &Options{
-		TypesSuffix:         "_pb.ts",
+		TypesSuffix:         "_type.ts",
 		ApiSuffix:           "_api.ts",
 		QuerySuffix:         "_react_query.ts",
 		EmptyFiles:          "emit",

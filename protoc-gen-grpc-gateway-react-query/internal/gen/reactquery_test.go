@@ -46,7 +46,7 @@ func TestQueryKeyFactory(t *testing.T) {
 func TestQueryKeyIncludesWholeRequest(t *testing.T) {
 	rq := generate(t, "")["user/v1/user_react_query.ts"]
 
-	want := `listUsers: (request: user_v1_user_pb.ListUsersRequest | undefined) =>
+	want := `listUsers: (request: user_v1_user_type.ListUsersRequest | undefined) =>
     [...userServiceKeys.all, "listUsers", request] as const,`
 	if !strings.Contains(rq, want) {
 		t.Errorf("expected the whole request in the key:\n%s", want)
@@ -108,7 +108,7 @@ func TestMutationOptionsPrecedeMutationFn(t *testing.T) {
 func TestRequestIsOptionalWithEnabled(t *testing.T) {
 	rq := generate(t, "")["user/v1/user_react_query.ts"]
 
-	if !strings.Contains(rq, "request: user_v1_user_pb.GetUserRequest | undefined,") {
+	if !strings.Contains(rq, "request: user_v1_user_type.GetUserRequest | undefined,") {
 		t.Error("a query hook must accept an undefined request by default")
 	}
 	if !strings.Contains(rq, "enabled: enabled ?? request !== undefined,") {
@@ -222,7 +222,7 @@ func TestQueriesOverride(t *testing.T) {
 func TestResponseBodyDrivesHookData(t *testing.T) {
 	rq := generate(t, "")["user/v1/user_react_query.ts"]
 
-	if !strings.Contains(rq, "UseQueryOptions<user_v1_user_pb.User, Error, user_v1_user_pb.User>") {
+	if !strings.Contains(rq, "UseQueryOptions<user_v1_user_type.User, Error, user_v1_user_type.User>") {
 		t.Error("response_body must drive the hook data type")
 	}
 }
@@ -242,7 +242,7 @@ func TestImportsAreCorrect(t *testing.T) {
 	if !strings.Contains(rq, `import type { UserServiceClient } from "./user_api.js";`) {
 		t.Error("the client class must be imported from the matching _api file")
 	}
-	if !strings.Contains(rq, `import type * as user_v1_user_pb from "./user_pb.js";`) {
+	if !strings.Contains(rq, `import type * as user_v1_user_type from "./user_type.js";`) {
 		t.Error("the types file must be imported under the contract's namespace alias")
 	}
 }

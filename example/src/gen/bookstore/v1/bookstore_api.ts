@@ -2,7 +2,7 @@
 // @grpc-gateway-typescript-contract: v1
 // source: bookstore/v1/bookstore.proto
 
-import type * as bookstore_v1_bookstore_pb from "./bookstore_pb.js";
+import type * as bookstore_v1_bookstore_type from "./bookstore_type.js";
 import type { AxiosInstance, AxiosRequestConfig } from "axios";
 
 /**
@@ -23,14 +23,14 @@ export class BookstoreServiceClient {
    * wrapper object, so the generated client resolves to Book.
    */
   async getBook(
-    request: bookstore_v1_bookstore_pb.GetBookRequest,
+    request: bookstore_v1_bookstore_type.GetBookRequest,
     config?: AxiosRequestConfig,
-  ): Promise<bookstore_v1_bookstore_pb.Book> {
+  ): Promise<bookstore_v1_bookstore_type.Book> {
     if (request.id == null) {
       throw new Error("missing required path parameter: id");
     }
 
-    const response = await this.http.request<bookstore_v1_bookstore_pb.Book>({
+    const response = await this.http.request<bookstore_v1_bookstore_type.Book>({
       ...config,
       url: `/v1/books/${encodeURIComponent(String(request.id))}`,
       method: "GET",
@@ -46,9 +46,9 @@ export class BookstoreServiceClient {
    * parameter, in the exact form the gateway parses.
    */
   async listBooks(
-    request: bookstore_v1_bookstore_pb.ListBooksRequest,
+    request: bookstore_v1_bookstore_type.ListBooksRequest,
     config?: AxiosRequestConfig,
-  ): Promise<bookstore_v1_bookstore_pb.ListBooksResponse> {
+  ): Promise<bookstore_v1_bookstore_type.ListBooksResponse> {
     if (request.shelfId == null) {
       throw new Error("missing required path parameter: shelf_id");
     }
@@ -92,7 +92,7 @@ export class BookstoreServiceClient {
     }
     const queryString = query.toString();
 
-    const response = await this.http.request<bookstore_v1_bookstore_pb.ListBooksResponse>({
+    const response = await this.http.request<bookstore_v1_bookstore_type.ListBooksResponse>({
       ...config,
       url: `/v1/shelves/${encodeURIComponent(String(request.shelfId))}/books`.concat(queryString === "" ? "" : `?${queryString}`),
       method: "GET",
@@ -107,14 +107,14 @@ export class BookstoreServiceClient {
    * body: "*" means the whole request is the body and there is no query string.
    */
   async createBook(
-    request: bookstore_v1_bookstore_pb.CreateBookRequest,
+    request: bookstore_v1_bookstore_type.CreateBookRequest,
     config?: AxiosRequestConfig,
-  ): Promise<bookstore_v1_bookstore_pb.CreateBookResponse> {
+  ): Promise<bookstore_v1_bookstore_type.CreateBookResponse> {
     if (request.shelfId == null) {
       throw new Error("missing required path parameter: shelf_id");
     }
 
-    const response = await this.http.request<bookstore_v1_bookstore_pb.CreateBookResponse>({
+    const response = await this.http.request<bookstore_v1_bookstore_type.CreateBookResponse>({
       ...config,
       url: `/v1/shelves/${encodeURIComponent(String(request.shelfId))}/books`,
       method: "POST",
@@ -131,9 +131,9 @@ export class BookstoreServiceClient {
    * excluded from the query, while update_mask is still sent as a query parameter.
    */
   async updateBook(
-    request: bookstore_v1_bookstore_pb.UpdateBookRequest,
+    request: bookstore_v1_bookstore_type.UpdateBookRequest,
     config?: AxiosRequestConfig,
-  ): Promise<bookstore_v1_bookstore_pb.UpdateBookResponse> {
+  ): Promise<bookstore_v1_bookstore_type.UpdateBookResponse> {
     if (request.book?.id == null) {
       throw new Error("missing required path parameter: book.id");
     }
@@ -144,7 +144,7 @@ export class BookstoreServiceClient {
     }
     const queryString = query.toString();
 
-    const response = await this.http.request<bookstore_v1_bookstore_pb.UpdateBookResponse>({
+    const response = await this.http.request<bookstore_v1_bookstore_type.UpdateBookResponse>({
       ...config,
       url: `/v1/books/${encodeURIComponent(String(request.book?.id))}`.concat(queryString === "" ? "" : `?${queryString}`),
       method: "PATCH",
@@ -158,14 +158,14 @@ export class BookstoreServiceClient {
    * DeleteBook removes a book.
    */
   async deleteBook(
-    request: bookstore_v1_bookstore_pb.DeleteBookRequest,
+    request: bookstore_v1_bookstore_type.DeleteBookRequest,
     config?: AxiosRequestConfig,
-  ): Promise<bookstore_v1_bookstore_pb.DeleteBookResponse> {
+  ): Promise<bookstore_v1_bookstore_type.DeleteBookResponse> {
     if (request.id == null) {
       throw new Error("missing required path parameter: id");
     }
 
-    const response = await this.http.request<bookstore_v1_bookstore_pb.DeleteBookResponse>({
+    const response = await this.http.request<bookstore_v1_bookstore_type.DeleteBookResponse>({
       ...config,
       url: `/v1/books/${encodeURIComponent(String(request.id))}`,
       method: "DELETE",
@@ -179,10 +179,10 @@ export class BookstoreServiceClient {
    * option can turn into a query hook.
    */
   async searchBooks(
-    request: bookstore_v1_bookstore_pb.SearchBooksRequest,
+    request: bookstore_v1_bookstore_type.SearchBooksRequest,
     config?: AxiosRequestConfig,
-  ): Promise<bookstore_v1_bookstore_pb.SearchBooksResponse> {
-    const response = await this.http.request<bookstore_v1_bookstore_pb.SearchBooksResponse>({
+  ): Promise<bookstore_v1_bookstore_type.SearchBooksResponse> {
+    const response = await this.http.request<bookstore_v1_bookstore_type.SearchBooksResponse>({
       ...config,
       url: `/v1/books:search`,
       method: "POST",
@@ -196,14 +196,14 @@ export class BookstoreServiceClient {
    * ArchiveBook uses a custom verb, which must stay outside the encoded variable.
    */
   async archiveBook(
-    request: bookstore_v1_bookstore_pb.ArchiveBookRequest,
+    request: bookstore_v1_bookstore_type.ArchiveBookRequest,
     config?: AxiosRequestConfig,
-  ): Promise<bookstore_v1_bookstore_pb.ArchiveBookResponse> {
+  ): Promise<bookstore_v1_bookstore_type.ArchiveBookResponse> {
     if (request.id == null) {
       throw new Error("missing required path parameter: id");
     }
 
-    const response = await this.http.request<bookstore_v1_bookstore_pb.ArchiveBookResponse>({
+    const response = await this.http.request<bookstore_v1_bookstore_type.ArchiveBookResponse>({
       ...config,
       url: `/v1/books/${encodeURIComponent(String(request.id))}:archive`,
       method: "POST",
@@ -218,10 +218,10 @@ export class BookstoreServiceClient {
    * ignored by default and generated as importBooksBinding2 when enabled.
    */
   async importBooks(
-    request: bookstore_v1_bookstore_pb.ImportBooksRequest,
+    request: bookstore_v1_bookstore_type.ImportBooksRequest,
     config?: AxiosRequestConfig,
-  ): Promise<bookstore_v1_bookstore_pb.ImportBooksResponse> {
-    const response = await this.http.request<bookstore_v1_bookstore_pb.ImportBooksResponse>({
+  ): Promise<bookstore_v1_bookstore_type.ImportBooksResponse> {
+    const response = await this.http.request<bookstore_v1_bookstore_type.ImportBooksResponse>({
       ...config,
       url: `/v1/books:import`,
       method: "POST",

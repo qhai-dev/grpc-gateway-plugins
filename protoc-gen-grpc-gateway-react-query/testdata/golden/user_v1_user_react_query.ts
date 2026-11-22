@@ -2,7 +2,7 @@
 // @grpc-gateway-typescript-contract: v1
 // source: user/v1/user.proto
 
-import type * as user_v1_user_pb from "./user_pb.js";
+import type * as user_v1_user_type from "./user_type.js";
 
 import type { UserServiceClient } from "./user_api.js";
 import type { UseMutationOptions, UseQueryOptions } from "@tanstack/react-query";
@@ -15,16 +15,16 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 export const userServiceKeys = {
   all: ["UserService"] as const,
 
-  getUser: (request: user_v1_user_pb.GetUserRequest | undefined) =>
+  getUser: (request: user_v1_user_type.GetUserRequest | undefined) =>
     [...userServiceKeys.all, "getUser", request] as const,
 
-  listUsers: (request: user_v1_user_pb.ListUsersRequest | undefined) =>
+  listUsers: (request: user_v1_user_type.ListUsersRequest | undefined) =>
     [...userServiceKeys.all, "listUsers", request] as const,
 
-  createUser: (request: user_v1_user_pb.CreateUserRequest) =>
+  createUser: (request: user_v1_user_type.CreateUserRequest) =>
     [...userServiceKeys.all, "createUser", request] as const,
 
-  updateUser: (request: user_v1_user_pb.UpdateUserRequest) =>
+  updateUser: (request: user_v1_user_type.UpdateUserRequest) =>
     [...userServiceKeys.all, "updateUser", request] as const,
 } as const;
 
@@ -33,9 +33,9 @@ export const userServiceKeys = {
  */
 export function useGetUser(
   client: UserServiceClient,
-  request: user_v1_user_pb.GetUserRequest | undefined,
+  request: user_v1_user_type.GetUserRequest | undefined,
   options?: Omit<
-    UseQueryOptions<user_v1_user_pb.User, Error, user_v1_user_pb.User>,
+    UseQueryOptions<user_v1_user_type.User, Error, user_v1_user_type.User>,
     "queryKey" | "queryFn"
   >,
 ) {
@@ -59,9 +59,9 @@ export function useGetUser(
  */
 export function useListUsers(
   client: UserServiceClient,
-  request: user_v1_user_pb.ListUsersRequest | undefined,
+  request: user_v1_user_type.ListUsersRequest | undefined,
   options?: Omit<
-    UseQueryOptions<user_v1_user_pb.ListUsersResponse, Error, user_v1_user_pb.ListUsersResponse>,
+    UseQueryOptions<user_v1_user_type.ListUsersResponse, Error, user_v1_user_type.ListUsersResponse>,
     "queryKey" | "queryFn"
   >,
 ) {
@@ -85,11 +85,11 @@ export function useListUsers(
  */
 export function useCreateUser(
   client: UserServiceClient,
-  options?: UseMutationOptions<user_v1_user_pb.CreateUserResponse, Error, user_v1_user_pb.CreateUserRequest>,
+  options?: UseMutationOptions<user_v1_user_type.CreateUserResponse, Error, user_v1_user_type.CreateUserRequest>,
 ) {
   return useMutation({
     ...options,
-    mutationFn: (request: user_v1_user_pb.CreateUserRequest) => client.createUser(request),
+    mutationFn: (request: user_v1_user_type.CreateUserRequest) => client.createUser(request),
   });
 }
 
@@ -98,10 +98,10 @@ export function useCreateUser(
  */
 export function useUpdateUser(
   client: UserServiceClient,
-  options?: UseMutationOptions<user_v1_user_pb.UpdateUserResponse, Error, user_v1_user_pb.UpdateUserRequest>,
+  options?: UseMutationOptions<user_v1_user_type.UpdateUserResponse, Error, user_v1_user_type.UpdateUserRequest>,
 ) {
   return useMutation({
     ...options,
-    mutationFn: (request: user_v1_user_pb.UpdateUserRequest) => client.updateUser(request),
+    mutationFn: (request: user_v1_user_type.UpdateUserRequest) => client.updateUser(request),
   });
 }

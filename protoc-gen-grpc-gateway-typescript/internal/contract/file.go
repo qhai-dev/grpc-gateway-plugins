@@ -68,7 +68,7 @@ func (o *Options) QueryImportPath(sourceProto, targetProto string) (spec, alias 
 // relativeImport builds a relative module specifier.
 //
 // import_extension exists for NodeNext, where the TypeScript source file
-// `address_pb.ts` is imported as `./address_pb.js`: the emitted specifier must
+// `address_type.ts` is imported as `./address_type.js`: the emitted specifier must
 // name the runtime file, not the source file. So only the `.ts` extension is
 // replaced, never the whole configured suffix: `user.types.ts` with
 // import_extension=.js becomes `user.types.js`, and a naive whole-suffix trim
@@ -119,7 +119,7 @@ func splitDir(dir string) []string {
 // deterministic and never collide between files that share a base name in
 // different directories, because the whole path is folded into one identifier.
 //
-//	user/v1/address.proto (+ _pb.ts) -> user_v1_address_pb
+//	user/v1/address.proto (+ _type.ts) -> user_v1_address_type
 func ImportAlias(protoPath, suffix string) string {
 	name := FileBase(protoPath) + strings.TrimSuffix(suffix, path.Ext(suffix))
 
@@ -141,7 +141,7 @@ func ImportAlias(protoPath, suffix string) string {
 
 // SkipProto reports whether a proto file is deliberately outside the generated
 // set. Buf with include_imports lists google/protobuf and google/api protos in
-// file_to_generate; generating timestamp_pb.ts there would be noise, and the
+// file_to_generate; generating timestamp_type.ts there would be noise, and the
 // types plugin inlines those types anyway.
 func (o *Options) SkipProto(protoPath string) bool {
 	switch {

@@ -2,7 +2,7 @@
 // @grpc-gateway-typescript-contract: v1
 // source: user/v1/user.proto
 
-import type * as common_v1_address_pb from "../../common/v1/address_pb.js";
+import type * as common_v1_address_type from "../../common/v1/address_type.js";
 
 /**
  * UserStatus is the lifecycle state of a user.
@@ -131,7 +131,7 @@ export type User = {
   avatar?: string;
   active?: boolean;
   status?: UserStatus;
-  address?: common_v1_address_pb.Address;
+  address?: common_v1_address_type.Address;
   nickname?: string;
   payment?: Payment;
   createdAt?: string;

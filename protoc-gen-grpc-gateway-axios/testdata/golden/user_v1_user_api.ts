@@ -2,7 +2,7 @@
 // @grpc-gateway-typescript-contract: v1
 // source: user/v1/user.proto
 
-import type * as user_v1_user_pb from "./user_pb.js";
+import type * as user_v1_user_type from "./user_type.js";
 import type { AxiosInstance, AxiosRequestConfig } from "axios";
 
 /**
@@ -15,14 +15,14 @@ export class UserServiceClient {
    * GetUser returns a single user.
    */
   async getUser(
-    request: user_v1_user_pb.GetUserRequest,
+    request: user_v1_user_type.GetUserRequest,
     config?: AxiosRequestConfig,
-  ): Promise<user_v1_user_pb.User> {
+  ): Promise<user_v1_user_type.User> {
     if (request.id == null) {
       throw new Error("missing required path parameter: id");
     }
 
-    const response = await this.http.request<user_v1_user_pb.User>({
+    const response = await this.http.request<user_v1_user_type.User>({
       ...config,
       url: `/v1/users/${encodeURIComponent(String(request.id))}`,
       method: "GET",
@@ -35,9 +35,9 @@ export class UserServiceClient {
    * ListUsers pages through users.
    */
   async listUsers(
-    request: user_v1_user_pb.ListUsersRequest,
+    request: user_v1_user_type.ListUsersRequest,
     config?: AxiosRequestConfig,
-  ): Promise<user_v1_user_pb.ListUsersResponse> {
+  ): Promise<user_v1_user_type.ListUsersResponse> {
     const query = new URLSearchParams();
     if (request.page != null) {
       query.append("page", String(request.page));
@@ -83,7 +83,7 @@ export class UserServiceClient {
     }
     const queryString = query.toString();
 
-    const response = await this.http.request<user_v1_user_pb.ListUsersResponse>({
+    const response = await this.http.request<user_v1_user_type.ListUsersResponse>({
       ...config,
       url: `/v1/users`.concat(queryString === "" ? "" : `?${queryString}`),
       method: "GET",
@@ -96,10 +96,10 @@ export class UserServiceClient {
    * CreateUser creates a user.
    */
   async createUser(
-    request: user_v1_user_pb.CreateUserRequest,
+    request: user_v1_user_type.CreateUserRequest,
     config?: AxiosRequestConfig,
-  ): Promise<user_v1_user_pb.CreateUserResponse> {
-    const response = await this.http.request<user_v1_user_pb.CreateUserResponse>({
+  ): Promise<user_v1_user_type.CreateUserResponse> {
+    const response = await this.http.request<user_v1_user_type.CreateUserResponse>({
       ...config,
       url: `/v1/users`,
       method: "POST",
@@ -113,9 +113,9 @@ export class UserServiceClient {
    * UpdateUser patches a user.
    */
   async updateUser(
-    request: user_v1_user_pb.UpdateUserRequest,
+    request: user_v1_user_type.UpdateUserRequest,
     config?: AxiosRequestConfig,
-  ): Promise<user_v1_user_pb.UpdateUserResponse> {
+  ): Promise<user_v1_user_type.UpdateUserResponse> {
     if (request.user?.id == null) {
       throw new Error("missing required path parameter: user.id");
     }
@@ -126,7 +126,7 @@ export class UserServiceClient {
     }
     const queryString = query.toString();
 
-    const response = await this.http.request<user_v1_user_pb.UpdateUserResponse>({
+    const response = await this.http.request<user_v1_user_type.UpdateUserResponse>({
       ...config,
       url: `/v1/users/${encodeURIComponent(String(request.user?.id))}`.concat(queryString === "" ? "" : `?${queryString}`),
       method: "PATCH",

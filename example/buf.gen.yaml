@@ -34,7 +34,7 @@ plugins:
     opt:
       - import_extension=.js
       - use_proto_names=false
-      - types_suffix=_pb.ts
+      - types_suffix=_type.ts
       - api_suffix=_api.ts
       - query_suffix=_react_query.ts
       - enum_style=union
@@ -51,7 +51,7 @@ plugins:
     opt:
       - import_extension=.js
       - use_proto_names=false
-      - types_suffix=_pb.ts
+      - types_suffix=_type.ts
       - api_suffix=_api.ts
       - query_suffix=_react_query.ts
       - client_style=class
@@ -68,7 +68,7 @@ plugins:
     opt:
       - import_extension=.js
       - use_proto_names=false
-      - types_suffix=_pb.ts
+      - types_suffix=_type.ts
       - api_suffix=_api.ts
       - query_suffix=_react_query.ts
       # Must match the Axios plugin. If it generates extra binding methods and this

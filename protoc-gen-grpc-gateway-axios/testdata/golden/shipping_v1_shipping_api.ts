@@ -2,7 +2,7 @@
 // @grpc-gateway-typescript-contract: v1
 // source: shipping/v1/shipping.proto
 
-import type * as shipping_v1_shipping_pb from "./shipping_pb.js";
+import type * as shipping_v1_shipping_type from "./shipping_type.js";
 import type { AxiosInstance, AxiosRequestConfig } from "axios";
 
 const encodePathSegments = (value: unknown): string =>
@@ -23,14 +23,14 @@ export class ShipperServiceClient {
    * must stay literal, or the route no longer matches.
    */
   async getShipper(
-    request: shipping_v1_shipping_pb.GetShipperRequest,
+    request: shipping_v1_shipping_type.GetShipperRequest,
     config?: AxiosRequestConfig,
-  ): Promise<shipping_v1_shipping_pb.GetShipperResponse> {
+  ): Promise<shipping_v1_shipping_type.GetShipperResponse> {
     if (request.name == null) {
       throw new Error("missing required path parameter: name");
     }
 
-    const response = await this.http.request<shipping_v1_shipping_pb.GetShipperResponse>({
+    const response = await this.http.request<shipping_v1_shipping_type.GetShipperResponse>({
       ...config,
       url: `/v1/${encodePathSegments(request.name)}`,
       method: "GET",
@@ -43,14 +43,14 @@ export class ShipperServiceClient {
    * ActivateShipper uses a :verb suffix.
    */
   async activateShipper(
-    request: shipping_v1_shipping_pb.ActivateShipperRequest,
+    request: shipping_v1_shipping_type.ActivateShipperRequest,
     config?: AxiosRequestConfig,
-  ): Promise<shipping_v1_shipping_pb.ActivateShipperResponse> {
+  ): Promise<shipping_v1_shipping_type.ActivateShipperResponse> {
     if (request.id == null) {
       throw new Error("missing required path parameter: id");
     }
 
-    const response = await this.http.request<shipping_v1_shipping_pb.ActivateShipperResponse>({
+    const response = await this.http.request<shipping_v1_shipping_type.ActivateShipperResponse>({
       ...config,
       url: `/v1/shippers/${encodeURIComponent(String(request.id))}:activate`,
       method: "POST",
@@ -65,9 +65,9 @@ export class ShipperServiceClient {
    * query parameters.
    */
   async updateShipper(
-    request: shipping_v1_shipping_pb.UpdateShipperRequest,
+    request: shipping_v1_shipping_type.UpdateShipperRequest,
     config?: AxiosRequestConfig,
-  ): Promise<shipping_v1_shipping_pb.UpdateShipperResponse> {
+  ): Promise<shipping_v1_shipping_type.UpdateShipperResponse> {
     if (request.shipper?.id == null) {
       throw new Error("missing required path parameter: shipper.id");
     }
@@ -78,7 +78,7 @@ export class ShipperServiceClient {
     }
     const queryString = query.toString();
 
-    const response = await this.http.request<shipping_v1_shipping_pb.UpdateShipperResponse>({
+    const response = await this.http.request<shipping_v1_shipping_type.UpdateShipperResponse>({
       ...config,
       url: `/v1/shippers/${encodeURIComponent(String(request.shipper?.id))}`.concat(queryString === "" ? "" : `?${queryString}`),
       method: "PATCH",
@@ -92,9 +92,9 @@ export class ShipperServiceClient {
    * WatchWarehouse binds a catch-all variable.
    */
   async watchWarehouse(
-    request: shipping_v1_shipping_pb.WatchWarehouseRequest,
+    request: shipping_v1_shipping_type.WatchWarehouseRequest,
     config?: AxiosRequestConfig,
-  ): Promise<shipping_v1_shipping_pb.WatchWarehouseResponse> {
+  ): Promise<shipping_v1_shipping_type.WatchWarehouseResponse> {
     if (request.path == null) {
       throw new Error("missing required path parameter: path");
     }
@@ -105,7 +105,7 @@ export class ShipperServiceClient {
     }
     const queryString = query.toString();
 
-    const response = await this.http.request<shipping_v1_shipping_pb.WatchWarehouseResponse>({
+    const response = await this.http.request<shipping_v1_shipping_type.WatchWarehouseResponse>({
       ...config,
       url: `/v1/${encodePathSegments(request.path)}`.concat(queryString === "" ? "" : `?${queryString}`),
       method: "GET",
@@ -119,16 +119,16 @@ export class ShipperServiceClient {
    * older route.
    */
   async exportShippers(
-    request: shipping_v1_shipping_pb.ExportShippersRequest,
+    request: shipping_v1_shipping_type.ExportShippersRequest,
     config?: AxiosRequestConfig,
-  ): Promise<shipping_v1_shipping_pb.ExportShippersResponse> {
+  ): Promise<shipping_v1_shipping_type.ExportShippersResponse> {
     const query = new URLSearchParams();
     if (request.includeDisabled != null) {
       query.append("includeDisabled", String(request.includeDisabled));
     }
     const queryString = query.toString();
 
-    const response = await this.http.request<shipping_v1_shipping_pb.ExportShippersResponse>({
+    const response = await this.http.request<shipping_v1_shipping_type.ExportShippersResponse>({
       ...config,
       url: `/v1/shippers:export`.concat(queryString === "" ? "" : `?${queryString}`),
       method: "GET",
@@ -141,14 +141,14 @@ export class ShipperServiceClient {
    * CustomRule uses an arbitrary HTTP kind.
    */
   async customRule(
-    request: shipping_v1_shipping_pb.CustomRuleRequest,
+    request: shipping_v1_shipping_type.CustomRuleRequest,
     config?: AxiosRequestConfig,
-  ): Promise<shipping_v1_shipping_pb.CustomRuleResponse> {
+  ): Promise<shipping_v1_shipping_type.CustomRuleResponse> {
     if (request.id == null) {
       throw new Error("missing required path parameter: id");
     }
 
-    const response = await this.http.request<shipping_v1_shipping_pb.CustomRuleResponse>({
+    const response = await this.http.request<shipping_v1_shipping_type.CustomRuleResponse>({
       ...config,
       url: `/v1/shippers/${encodeURIComponent(String(request.id))}`,
       method: "HEAD",

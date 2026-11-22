@@ -1,7 +1,7 @@
 // Command protoc-gen-grpc-gateway-typescript generates TypeScript types from
 // proto messages and enums.
 //
-// It emits <base>_pb.ts next to the source proto path, where <base> is the proto
+// It emits <base>_type.ts next to the source proto path, where <base> is the proto
 // path with the .proto suffix removed. Well-known types are inlined as TypeScript
 // primitives and google/protobuf/*.proto is never generated, even when Buf is
 // configured with include_imports.

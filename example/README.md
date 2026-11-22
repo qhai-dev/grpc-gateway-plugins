@@ -18,7 +18,7 @@ example/
 │   └── common/v1/money.proto            # a cross-file type, no service
 ├── src/
 │   ├── gen/                             # generated, checked in
-│   │   ├── bookstore/v1/bookstore_pb.ts
+│   │   ├── bookstore/v1/bookstore_type.ts
 │   │   ├── bookstore/v1/bookstore_api.ts
 │   │   ├── bookstore/v1/bookstore_react_query.ts
 │   │   └── common/v1/…                  # one types file, two header-only files
@@ -138,7 +138,7 @@ The example is arranged so the boundary is visible:
 
 | Concern | Owner | File |
 | --- | --- | --- |
-| Message and enum types | generated | `src/gen/**/*_pb.ts` |
+| Message and enum types | generated | `src/gen/**/*_type.ts` |
 | URL, method, query encoding, body | generated | `src/gen/**/*_api.ts` |
 | Query keys, `useQuery` / `useMutation` | generated | `src/gen/**/*_react_query.ts` |
 | axios instance, auth, error mapping | application | `src/lib/http.ts` |
