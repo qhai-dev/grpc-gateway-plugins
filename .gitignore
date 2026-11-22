@@ -1,0 +1,18 @@
+# Build output of the plugins and the workspace scratch directory
+.verify/
+bin/
+
+# The plugin binaries the example builds locally
+example/.bin/
+
+# Node
+node_modules/
+dist/
+*.log
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+
+# Buf build output
+.buf/

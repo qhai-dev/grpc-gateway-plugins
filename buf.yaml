@@ -1,0 +1,35 @@
+version: v2
+
+# A Buf module over the example protos, for verifying that the three plugins work with
+# Buf from the repository root.
+#
+# The example itself is the canonical Buf project: it has its own buf.yaml, buf.gen.yaml
+# and buf.lock in example/, and `cd example && npm run generate` is how the SDK is built.
+# This root module exists so the plugins can be exercised with Buf without the example's
+# Node toolchain, and `make buf-check` uses it to prove the two entry points agree.
+#
+# google/api comes from the Buf Schema Registry rather than the vendored _protodeps copy.
+# That is the idiomatic route, and buf.lock pins the exact commit, so two machines cannot
+# resolve different definitions of the same annotation. _protodeps remains for the
+# protoc path in the test fixtures, which cannot fetch dependencies on its own.
+modules:
+  - path: example/proto
+
+deps:
+  - buf.build/googleapis/googleapis
+
+lint:
+  use:
+    - STANDARD
+  except:
+    # The example declares a request and a response message for each RPC so the
+    # generated code reads clearly. The standard rules prefer a shared message per RPC
+    # and a name derived from the method, which would make the example harder to follow
+    # for no benefit.
+    - RPC_REQUEST_RESPONSE_UNIQUE
+    - RPC_REQUEST_STANDARD_NAME
+    - RPC_RESPONSE_STANDARD_NAME
+
+breaking:
+  use:
+    - FILE

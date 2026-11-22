@@ -1,0 +1,40 @@
+{
+  "name": "grpc-gateway-typescript-example",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Bookstore example for the three protoc plugins, generated and managed by Buf",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "lint:proto": "node scripts/buf.mjs lint",
+    "deps:update": "node scripts/buf.mjs dep update",
+    "check": "npm run generate && npm run typecheck && npm run test",
+    "mock": "node mock-server/server.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "build": "vite build",
+    "dev": "vite",
+    "dev:full": "node scripts/dev.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.62.7",
+    "axios": "^1.7.9",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@tanstack/react-query-devtools": "^5.62.7",
+    "@bufbuild/buf": "^1.47.2",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.5",
+    "vitest": "^2.1.8"
+  }
+}

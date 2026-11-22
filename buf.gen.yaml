@@ -1,0 +1,52 @@
+version: v2
+
+# Generates the three-artifact SDK from one descriptor set.
+#
+# This file is written for the repository checkout: `local` points at binaries that
+# `make build` (or example/scripts/generate.mjs) produces under .buf/bin. Buf
+# resolves a bare `local: protoc-gen-...` on PATH, which a fresh clone does not have,
+# so the paths are explicit.
+#
+# All three plugins must be configured with the same contract parameters:
+# types_suffix, api_suffix, query_suffix, import_extension and use_proto_names.
+# Changing a suffix on one plugin alone breaks the imports the other two emit, so
+# the shared options are repeated verbatim in all three entries.
+plugins:
+  - local: .buf/bin/protoc-gen-grpc-gateway-typescript
+    out: .buf/gen
+    opt:
+      - import_extension=.js
+      - use_proto_names=false
+      - types_suffix=_pb.ts
+      - api_suffix=_api.ts
+      - query_suffix=_react_query.ts
+      - enum_style=union
+      - oneof_style=union
+      - long_type=string
+
+  - local: .buf/bin/protoc-gen-grpc-gateway-axios
+    out: .buf/gen
+    opt:
+      - import_extension=.js
+      - use_proto_names=false
+      - types_suffix=_pb.ts
+      - api_suffix=_api.ts
+      - query_suffix=_react_query.ts
+      - client_style=class
+      - additional_bindings=ignore
+      - streaming=ignore
+
+  - local: .buf/bin/protoc-gen-grpc-gateway-react-query
+    out: .buf/gen
+    opt:
+      - import_extension=.js
+      - use_proto_names=false
+      - types_suffix=_pb.ts
+      - api_suffix=_api.ts
+      - query_suffix=_react_query.ts
+      # Must match the Axios plugin: if it generates extra binding methods and this
+      # plugin does not (or the reverse), the hook for a binding calls a client
+      # method that does not exist.
+      - additional_bindings=ignore
+      - hook_prefix=none
+      - request_optional=true

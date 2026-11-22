@@ -1,0 +1,218 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "common/v1/address.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+// UserService manages users.
+service UserService {
+  // GetUser returns a single user.
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/{id}"
+      response_body: "user"
+    };
+  }
+
+  // ListUsers pages through users.
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {
+      get: "/v1/users"
+    };
+  }
+
+  // CreateUser creates a user.
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "*"
+    };
+  }
+
+  // UpdateUser patches a user.
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      patch: "/v1/users/{user.id}"
+      body: "user"
+    };
+  }
+
+  // WatchUsers streams users; it must be skipped in v1.
+  rpc WatchUsers(WatchUsersRequest) returns (stream WatchUsersResponse);
+
+  // Ping has no HTTP rule; it must be skipped with a comment.
+  rpc Ping(GetUserRequest) returns (GetUserResponse);
+}
+
+// GetUserRequest identifies a user.
+message GetUserRequest {
+  // id is the user id.
+  string id = 1;
+}
+
+// GetUserResponse wraps a user.
+message GetUserResponse {
+  User user = 1;
+}
+
+// ListUsersRequest filters and pages users.
+message ListUsersRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  string keyword = 3;
+  repeated string ids = 4;
+  map<string, string> labels = 5;
+  UserFilter filter = 6;
+  repeated UserStatus statuses = 7;
+  bool include_deleted = 8;
+  int64 cursor = 9;
+  Header header = 10;
+}
+
+// Header exercises a second message type appearing in the same message, so a
+// shared type reached through two branches must expand twice.
+message Header {
+  string request_id = 1;
+  string trace_id = 2;
+}
+
+// ListUsersResponse pages users.
+message ListUsersResponse {
+  repeated User users = 1;
+  string next_page_token = 2;
+}
+
+// UserFilter filters users.
+message UserFilter {
+  UserStatus status = 1;
+  google.protobuf.Timestamp created_after = 2;
+  google.protobuf.Duration max_age = 3;
+  int32 min_age = 4;
+}
+
+// CreateUserRequest creates a user.
+message CreateUserRequest {
+  string name = 1;
+  // contact is sent separately in UpdateUser, as a nested body.
+  Contact contact = 2;
+  map<string, Contact> contacts_by_kind = 3;
+}
+
+// CreateUserResponse returns the created user.
+message CreateUserResponse {
+  User user = 1;
+}
+
+// UpdateUserRequest patches a user.
+message UpdateUserRequest {
+  User user = 1;
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// UpdateUserResponse returns the updated user.
+message UpdateUserResponse {
+  User user = 1;
+}
+
+// WatchUsersRequest watches users.
+message WatchUsersRequest {
+  string id = 1;
+}
+
+// WatchUsersResponse is one watched user.
+message WatchUsersResponse {
+  User user = 1;
+}
+
+// User is a user record.
+message User {
+  string id = 1;
+  string name = 2;
+  int32 age = 3;
+  int64 created_at_epoch = 4;
+  bytes avatar = 5;
+  bool active = 6;
+  UserStatus status = 7;
+  common.v1.Address address = 8;
+  optional string nickname = 9;
+  Payment payment = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Struct metadata = 12;
+  google.protobuf.Any extension = 13;
+  google.protobuf.Empty empty = 14;
+  google.protobuf.StringValue tagline = 15;
+  google.protobuf.Int64Value balance = 16;
+  google.protobuf.FieldMask mask_paths = 17;
+  Nested nested = 18;
+  repeated Nested.NestedStatus nested_statuses = 19;
+
+  // Nested is a nested message.
+  message Nested {
+    // NestedStatus is a nested enum.
+    enum NestedStatus {
+      NESTED_STATUS_UNSPECIFIED = 0;
+      NESTED_STATUS_ON = 1;
+    }
+    string label = 1;
+  }
+}
+
+// Contact is one way to reach a user.
+message Contact {
+  // Kind selects the contact channel.
+  oneof kind {
+    Email email = 1;
+    Phone phone = 2;
+  }
+  string label = 3;
+}
+
+// Email is an email address.
+message Email {
+  string address = 1;
+}
+
+// Phone is a phone number.
+message Phone {
+  string number = 1;
+}
+
+// Payment is a payment method.
+message Payment {
+  oneof method {
+    Card card = 1;
+    Bank bank = 2;
+    Cash cash = 3;
+  }
+}
+
+// Card is a card payment.
+message Card {
+  string number = 1;
+}
+
+// Bank is a bank payment.
+message Bank {
+  string iban = 1;
+}
+
+// Cash is a cash payment.
+message Cash {
+  string currency = 1;
+}
+
+// UserStatus is the lifecycle state of a user.
+enum UserStatus {
+  // USER_STATUS_UNSPECIFIED is the zero value.
+  USER_STATUS_UNSPECIFIED = 0;
+  USER_STATUS_ACTIVE = 1;
+  USER_STATUS_DISABLED = 2;
+}

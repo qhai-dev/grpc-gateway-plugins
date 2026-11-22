@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package common.v1;
+
+// Address is a postal address.
+message Address {
+  string street = 1;
+  string city = 2;
+  string country = 3;
+}

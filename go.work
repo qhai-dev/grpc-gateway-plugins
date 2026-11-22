@@ -1,0 +1,34 @@
+go 1.23
+
+// The repo holds four Go modules that are released and consumed independently:
+// one per protoc plugin, plus the conformance check that depends on
+// grpc-gateway's own runtime.
+//
+// The workspace exists so a single command can build or test every module against
+// the local sources rather than fetching each one from a proxy. Nothing here is
+// required to build any single module: each directory still builds on its own
+// with `go build ./...` and `GOWORK=off`.
+use (
+	./protoc-gen-grpc-gateway-typescript
+	./protoc-gen-grpc-gateway-axios
+	./protoc-gen-grpc-gateway-react-query
+
+	// The conformance check is a separate module on purpose: it depends on
+	// grpc-gateway's runtime and on Go types generated from the fixtures, and
+	// those must never become dependencies of the plugins themselves.
+	./protoc-gen-grpc-gateway-axios/conformance
+)
+
+// In workspace mode the build list is the union of every module's requirements, so
+// a requirement pruned away in any single module still takes part here. That
+// surfaces a long-standing ambiguity in genproto: the monolith module
+// google.golang.org/genproto used to contain googleapis/api and googleapis/rpc
+// before they were split out as separate modules, and grpc's opencensus
+// dependency still requires an old monolith version. With both in the build list,
+// the same import path resolves to two modules.
+//
+// Pinning the monolith to a version from after the split, where it no longer
+// carries those directories, removes the ambiguity. This lives in the workspace
+// rather than in any go.mod because it is a workspace-only consequence of the
+// union, and each module builds correctly on its own without it.
+replace google.golang.org/genproto => google.golang.org/genproto v0.0.0-20250102185135-69823020774d

@@ -1,0 +1,79 @@
+version: v2
+
+# Generates the three-artifact SDK from one descriptor set.
+#
+# Every plugin is invoked with `go run`, so generation compiles the plugins from the
+# parent repository on demand. That removes a build step that used to be a prerequisite
+# and, more importantly, removes the failure mode where a stale .bin/*.exe silently
+# generated output from code that no longer matches the working tree.
+#
+# The trade-off is that `go` must be on PATH and the first run compiles each plugin. A
+# warm build cache makes subsequent runs fast; set `local:` to a prebuilt binary path
+# instead if that matters.
+#
+# `local`, `out` and the paths inside `local` are all resolved against the working
+# directory Buf is run from, which is why the scripts and npm tasks always run Buf from
+# this directory.
+#
+# `out` is a directory, and Buf appends each proto's path relative to the module root
+# declared in buf.yaml (which is `proto`, so `proto/bookstore/v1/bookstore.proto` becomes
+# `bookstore/v1/bookstore.proto`). With `out: src/gen` the three files for that proto land
+# in src/gen/bookstore/v1/, and `out: .` would have put them in ./bookstore/v1/ instead.
+# The `proto/` segment is absorbed by the module root; it never appears in the output path.
+
+plugins:
+  # Types first: the other two import what this one declares, and reading the file in
+  # that order is easier when browsing the output.
+  - local:
+      - go
+      - run
+      - -C
+      - ../protoc-gen-grpc-gateway-typescript
+      - ./cmd/protoc-gen-grpc-gateway-typescript
+    out: src/gen
+    opt:
+      - import_extension=.js
+      - use_proto_names=false
+      - types_suffix=_pb.ts
+      - api_suffix=_api.ts
+      - query_suffix=_react_query.ts
+      - enum_style=union
+      - oneof_style=union
+      - long_type=string
+
+  - local:
+      - go
+      - run
+      - -C
+      - ../protoc-gen-grpc-gateway-axios
+      - ./cmd/protoc-gen-grpc-gateway-axios
+    out: src/gen
+    opt:
+      - import_extension=.js
+      - use_proto_names=false
+      - types_suffix=_pb.ts
+      - api_suffix=_api.ts
+      - query_suffix=_react_query.ts
+      - client_style=class
+      - additional_bindings=ignore
+      - streaming=ignore
+
+  - local:
+      - go
+      - run
+      - -C
+      - ../protoc-gen-grpc-gateway-react-query
+      - ./cmd/protoc-gen-grpc-gateway-react-query
+    out: src/gen
+    opt:
+      - import_extension=.js
+      - use_proto_names=false
+      - types_suffix=_pb.ts
+      - api_suffix=_api.ts
+      - query_suffix=_react_query.ts
+      # Must match the Axios plugin. If it generates extra binding methods and this
+      # plugin does not (or the reverse), a generated hook calls a client method that
+      # does not exist, and the failure only appears at the TypeScript compile.
+      - additional_bindings=ignore
+      - hook_prefix=none
+      - request_optional=true

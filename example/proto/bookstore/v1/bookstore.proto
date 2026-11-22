@@ -1,0 +1,289 @@
+syntax = "proto3";
+
+package bookstore.v1;
+
+import "common/v1/money.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+// BookstoreService is a small but realistic CRUD API.
+//
+// Between them these methods exercise every annotation the generators support:
+// path variables (single and nested), query parameters (scalars, repeated, map,
+// nested message, enum, int64, timestamp, bool), body: "*", a field body, a nested
+// field body, response_body, a :verb suffix, and an additional_binding.
+service BookstoreService {
+  // GetBook returns one book.
+  //
+  // response_body: "book" makes the gateway send the Book itself rather than a
+  // wrapper object, so the generated client resolves to Book.
+  rpc GetBook(GetBookRequest) returns (GetBookResponse) {
+    option (google.api.http) = {
+      get: "/v1/books/{id}"
+      response_body: "book"
+    };
+  }
+
+  // ListBooks pages through books.
+  //
+  // Every parameter other than the two path-bound ones becomes a query
+  // parameter, in the exact form the gateway parses.
+  rpc ListBooks(ListBooksRequest) returns (ListBooksResponse) {
+    option (google.api.http) = {
+      get: "/v1/shelves/{shelf_id}/books"
+    };
+  }
+
+  // CreateBook adds a book to a shelf.
+  //
+  // body: "*" means the whole request is the body and there is no query string.
+  rpc CreateBook(CreateBookRequest) returns (CreateBookResponse) {
+    option (google.api.http) = {
+      post: "/v1/shelves/{shelf_id}/books"
+      body: "*"
+    };
+  }
+
+  // UpdateBook patches a book, sending only the book as the body.
+  //
+  // body: "book" covers book and all of its descendants, which must therefore be
+  // excluded from the query, while update_mask is still sent as a query parameter.
+  rpc UpdateBook(UpdateBookRequest) returns (UpdateBookResponse) {
+    option (google.api.http) = {
+      patch: "/v1/books/{book.id}"
+      body: "book"
+    };
+  }
+
+  // DeleteBook removes a book.
+  rpc DeleteBook(DeleteBookRequest) returns (DeleteBookResponse) {
+    option (google.api.http) = {
+      delete: "/v1/books/{id}"
+    };
+  }
+
+  // SearchBooks is a POST that reads, which the React Query plugin's `queries`
+  // option can turn into a query hook.
+  rpc SearchBooks(SearchBooksRequest) returns (SearchBooksResponse) {
+    option (google.api.http) = {
+      post: "/v1/books:search"
+      body: "*"
+    };
+  }
+
+  // ArchiveBook uses a custom verb, which must stay outside the encoded variable.
+  rpc ArchiveBook(ArchiveBookRequest) returns (ArchiveBookResponse) {
+    option (google.api.http) = {
+      post: "/v1/books/{id}:archive"
+      body: "*"
+    };
+  }
+
+  // ImportBooks declares a second route for the same call. Additional bindings are
+  // ignored by default and generated as importBooksBinding2 when enabled.
+  rpc ImportBooks(ImportBooksRequest) returns (ImportBooksResponse) {
+    option (google.api.http) = {
+      post: "/v1/books:import"
+      body: "*"
+      additional_bindings {
+        post: "/v1/legacy/books:import"
+        body: "*"
+      }
+    };
+  }
+}
+
+// GetBookRequest identifies a book.
+message GetBookRequest {
+  // id is the book id.
+  string id = 1;
+}
+
+// GetBookResponse wraps a book.
+message GetBookResponse {
+  Book book = 1;
+}
+
+// ListBooksRequest filters the books of one shelf.
+message ListBooksRequest {
+  // shelf_id is bound from the path, so it is not a query parameter.
+  string shelf_id = 1;
+
+  // page is the 1-based page number, sent as page=.
+  int32 page = 2;
+  // page_size is sent as pageSize=.
+  int32 page_size = 3;
+  // keyword is trimmed; an empty string is still sent.
+  string keyword = 4;
+  // author_ids repeat as authorIds=1&authorIds=2.
+  repeated string author_ids = 5;
+  // labels become labels[key]=value.
+  map<string, string> labels = 6;
+  // filter expands into filter.author= and filter.published_after=.
+  BookFilter filter = 7;
+  // formats repeat as formats=FORMAT_EPUB.
+  repeated BookFormat formats = 8;
+  // include_out_of_print is a bool, and false must still be sent.
+  bool include_out_of_print = 9;
+  // min_price is an int64, kept as a decimal string.
+  int64 min_price_units = 10;
+}
+
+// BookFilter narrows a book search.
+message BookFilter {
+  // author matches on exact author name.
+  string author = 1;
+  // published_after becomes an RFC3339 query value.
+  google.protobuf.Timestamp published_after = 2;
+  // format is an enum, sent by name.
+  BookFormat format = 3;
+  // in_stock is a bool inside a nested message.
+  bool in_stock = 4;
+}
+
+// ListBooksResponse pages books.
+message ListBooksResponse {
+  repeated Book books = 1;
+  // next_page_token is empty on the last page.
+  string next_page_token = 2;
+  // total_count is an int64, so it stays a string.
+  int64 total_count = 3;
+}
+
+// CreateBookRequest adds a book.
+message CreateBookRequest {
+  // shelf_id is bound from the path; body: "*" means it is part of the body too.
+  string shelf_id = 1;
+  // title is required by the API but optional in the JSON type.
+  string title = 2;
+  // author is the author's name.
+  string author = 3;
+  // price is a cross-file message reference.
+  common.v1.Money price = 4;
+  // attributes is free-form JSON, typed as Record<string, JsonValue>.
+  map<string, string> attributes = 5;
+}
+
+// CreateBookResponse returns the created book.
+message CreateBookResponse {
+  Book book = 1;
+}
+
+// UpdateBookRequest patches a book.
+message UpdateBookRequest {
+  // book carries the fields to send; its id is bound from the path.
+  Book book = 1;
+  // update_mask is sent as a query parameter because the body covers only book.
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// UpdateBookResponse returns the updated book.
+message UpdateBookResponse {
+  Book book = 1;
+}
+
+// DeleteBookRequest removes a book.
+message DeleteBookRequest {
+  string id = 1;
+}
+
+// DeleteBookResponse is empty.
+message DeleteBookResponse {}
+
+// SearchBooksRequest is a read that uses POST so it can carry a large filter.
+message SearchBooksRequest {
+  // query is the free-text search string.
+  string query = 1;
+  // filter narrows the search.
+  BookFilter filter = 2;
+  // limit caps the number of results.
+  int32 limit = 3;
+}
+
+// SearchBooksResponse returns the matches.
+message SearchBooksResponse {
+  repeated Book books = 1;
+  // matched is the number of matches, as an int64.
+  int64 matched = 2;
+}
+
+// ArchiveBookRequest archives a book.
+message ArchiveBookRequest {
+  string id = 1;
+  // reason is recorded in the audit log.
+  string reason = 2;
+}
+
+// ArchiveBookResponse returns the archived book.
+message ArchiveBookResponse {
+  Book book = 1;
+}
+
+// ImportBooksRequest imports books from a payload.
+message ImportBooksRequest {
+  // csv is base64 in the JSON form, which is why it is typed as string.
+  bytes csv = 1;
+  // dry_run only validates.
+  bool dry_run = 2;
+}
+
+// ImportBooksResponse reports the import.
+message ImportBooksResponse {
+  // imported is the number of books accepted.
+  int32 imported = 1;
+  // errors lists per-line problems.
+  repeated string errors = 2;
+}
+
+// Book is a book in the catalog.
+message Book {
+  // id is assigned by the server.
+  string id = 1;
+  // title is the display title.
+  string title = 2;
+  // author is the author's name.
+  string author = 3;
+  // format is an enum, typed as a string union.
+  BookFormat format = 4;
+  // price is a cross-file message reference.
+  common.v1.Money price = 5;
+  // published_at becomes an RFC3339 string.
+  google.protobuf.Timestamp published_at = 6;
+  // page_count is an int32.
+  int32 page_count = 7;
+  // isbn_13 is optional in the proto sense, which must not become a union.
+  optional string isbn_13 = 8;
+  // availability is a business oneof, which becomes a mutually exclusive union.
+  oneof availability {
+    // in_print is set when the book can be ordered.
+    InPrint in_print = 9;
+    // out_of_print is set when it cannot.
+    OutOfPrint out_of_print = 10;
+  }
+  // tags are free-form labels.
+  repeated string tags = 11;
+}
+
+// InPrint describes an orderable book.
+message InPrint {
+  // stock is how many copies remain.
+  int32 stock = 1;
+  // restock_at is when more arrive.
+  google.protobuf.Timestamp restock_at = 2;
+}
+
+// OutOfPrint describes an unorderable book.
+message OutOfPrint {
+  // reason explains why.
+  string reason = 1;
+}
+
+// BookFormat is the physical format of a book.
+enum BookFormat {
+  // BOOK_FORMAT_UNSPECIFIED is the zero value.
+  BOOK_FORMAT_UNSPECIFIED = 0;
+  BOOK_FORMAT_HARDCOVER = 1;
+  BOOK_FORMAT_PAPERBACK = 2;
+  BOOK_FORMAT_EBOOK = 3;
+}

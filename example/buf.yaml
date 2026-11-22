@@ -1,0 +1,30 @@
+version: v2
+
+# This example is a Buf workspace: `buf generate` is the only way it produces the SDK.
+#
+# A Buf module is required, not optional. `buf generate` will not run without one, and
+# without `deps` the annotation imports (google/api/annotations.proto) would not
+# resolve either. Depending on the Buf Schema Registry instead of a vendored copy is
+# what makes this reproducible: buf.lock pins the exact commit, so two machines cannot
+# compile against different definitions of the same annotation.
+modules:
+  - path: proto
+
+deps:
+  - buf.build/googleapis/googleapis
+
+lint:
+  use:
+    - STANDARD
+  except:
+    # Each RPC below declares its own request and response message, which is what makes
+    # the generated SDK readable: GetBookRequest and GetBookResponse say more than a
+    # shared Book message would. The standard rules prefer one message shared across
+    # methods and a name derived from the method, so they are turned off deliberately.
+    - RPC_REQUEST_RESPONSE_UNIQUE
+    - RPC_REQUEST_STANDARD_NAME
+    - RPC_RESPONSE_STANDARD_NAME
+
+breaking:
+  use:
+    - FILE

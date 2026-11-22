@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package common.v1;
+
+// Money is an amount in a currency.
+//
+// It lives in its own proto file on purpose: the bookstore protos reference it
+// across files, which is what exercises the generated namespace import
+// (`import type * as common_v1_money_pb from "../common/v1/money_pb.js"`).
+message Money {
+  // currency_code is an ISO 4217 code such as "USD".
+  string currency_code = 1;
+  // units is the whole part of the amount.
+  int64 units = 2;
+  // nanos is the fractional part, in billionths.
+  int32 nanos = 3;
+}

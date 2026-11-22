@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+package shipping.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/field_mask.proto";
+
+// ShipperService exercises the awkward parts of google.api.http: multi-segment
+// path variables, verbs, nested bodies, response_body and extra bindings.
+service ShipperService {
+  // GetShipper binds a multi-segment variable: the value contains slashes that
+  // must stay literal, or the route no longer matches.
+  rpc GetShipper(GetShipperRequest) returns (GetShipperResponse) {
+    option (google.api.http) = {
+      get: "/v1/{name=shippers/*}"
+    };
+  }
+
+  // ActivateShipper uses a :verb suffix.
+  rpc ActivateShipper(ActivateShipperRequest) returns (ActivateShipperResponse) {
+    option (google.api.http) = {
+      post: "/v1/shippers/{id}:activate"
+      body: "*"
+    };
+  }
+
+  // UpdateShipper sends a nested field as the body, so the other fields are still
+  // query parameters.
+  rpc UpdateShipper(UpdateShipperRequest) returns (UpdateShipperResponse) {
+    option (google.api.http) = {
+      patch: "/v1/shippers/{shipper.id}"
+      body: "shipper"
+    };
+  }
+
+  // WatchWarehouse binds a catch-all variable.
+  rpc WatchWarehouse(WatchWarehouseRequest) returns (WatchWarehouseResponse) {
+    option (google.api.http) = {
+      get: "/v1/{path=warehouses/**}"
+    };
+  }
+
+  // ExportShippers declares an extra binding: the same data reachable under an
+  // older route.
+  rpc ExportShippers(ExportShippersRequest) returns (ExportShippersResponse) {
+    option (google.api.http) = {
+      get: "/v1/shippers:export"
+      additional_bindings {
+        get: "/v1/legacy/shippers:export"
+      }
+    };
+  }
+
+  // CustomRule uses an arbitrary HTTP kind.
+  rpc CustomRule(CustomRuleRequest) returns (CustomRuleResponse) {
+    option (google.api.http) = {
+      custom {
+        kind: "HEAD"
+        path: "/v1/shippers/{id}"
+      }
+    };
+  }
+}
+
+// GetShipperRequest identifies a shipper by resource name.
+message GetShipperRequest {
+  string name = 1;
+}
+
+// GetShipperResponse wraps a shipper.
+message GetShipperResponse {
+  Shipper shipper = 1;
+}
+
+// ActivateShipperRequest activates a shipper.
+message ActivateShipperRequest {
+  string id = 1;
+  string reason = 2;
+}
+
+// ActivateShipperResponse returns the active shipper.
+message ActivateShipperResponse {
+  Shipper shipper = 1;
+}
+
+// UpdateShipperRequest patches a shipper.
+message UpdateShipperRequest {
+  Shipper shipper = 1;
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// UpdateShipperResponse returns the updated shipper.
+message UpdateShipperResponse {
+  Shipper shipper = 1;
+}
+
+// WatchWarehouseRequest names a warehouse by path.
+message WatchWarehouseRequest {
+  string path = 1;
+  bool include_inactive = 2;
+}
+
+// WatchWarehouseResponse reports a warehouse.
+message WatchWarehouseResponse {
+  string path = 1;
+}
+
+// ExportShippersRequest filters an export.
+message ExportShippersRequest {
+  bool include_disabled = 1;
+}
+
+// ExportShippersResponse returns the export.
+message ExportShippersResponse {
+  bytes csv = 1;
+}
+
+// CustomRuleRequest drives the HEAD binding.
+message CustomRuleRequest {
+  string id = 1;
+}
+
+// CustomRuleResponse is the HEAD result.
+message CustomRuleResponse {
+  bool found = 1;
+}
+
+// Shipper is a shipper record.
+message Shipper {
+  string id = 1;
+  string name = 2;
+  bool enabled = 3;
+}
